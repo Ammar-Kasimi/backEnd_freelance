@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OfferRequest;
+use App\Models\Mission;
 use App\Models\Offer;
 use Illuminate\Http\Request;
 
@@ -15,34 +17,38 @@ class OfferController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(OfferRequest $request, Mission $mission)
     {
-        //
+       
+        $validated = $request->validated();
+        //  $validated['status']='pending';
+        $validated['mission_id'] = $mission->id;
+        
+        $offer = $request->user()->freelancer->offers()->create($validated);
+        // $offer->status = "pending";
+        // $offer->save();
+        // $mission->technologies()->sync($validated['technologies_ids']);
+        return response()->json(['status' => "success", 'message' => 'offer created successfully', 'data' => $offer], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Offer $offer)
+    public function accept_offer(Request $request, Mission $mission, Offer $offer)
     {
-        //
+        $offer->status = 'accepted';
+        $offer->save();
+        $mission->offers()->where('status', 'pending')->update(['status' => 'refused']);
+        $mission->status='active';
+        $mission->save();
+        $userName = $offer->freelancer->user->name;
+        return response()->json(['status' => 'success', 'message' => "offer of $userName for $mission->title is accepted successfully"], 200);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Offer $offer)
+    public function show(Offer $offer)
     {
         //
     }

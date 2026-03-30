@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->float("tarrif");
             $table->text("desc");
+            $table->string('status');
+            $table->foreignId('mission_id')->constrained();
+            $table->foreignId('freelancer_profile_id')->constrained;
             $table->timestamps();
         });
     }

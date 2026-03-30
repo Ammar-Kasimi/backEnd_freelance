@@ -16,6 +16,9 @@ class Mission extends Model
     public function category (){
         return $this->belongsTo(Category::class);
     }
+    public function offers(){
+        return $this->hasMany(Offer::class);
+    }
     protected $fillable = ['title','desc','budget','duree','status','category_id','client_id'];
     // public function users():BelongsTo{
     //  return $this->belongsTo(user::class);

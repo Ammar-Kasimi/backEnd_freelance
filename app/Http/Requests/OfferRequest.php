@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class MissionRequest extends FormRequest
+class OfferRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,17 +20,15 @@ class MissionRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
+    protected function prepareForValidation(){
+        $this->mergeIfMissing(['status'=>'pending']);
+    }
     public function rules(): array
     {
         return [
-            'title' => 'required|string|min:5|max:255',
-            'desc'  => 'required|string|min:20',
-            'budget' => 'required|numeric|min:5',
-            'duree'  => 'required|integer|min:1',
-            'category_id'=>'nullable|integer|exists:categories,id',
-            'technologies_ids'=>'nullable|array',
-            'technologies_ids.*'=>'integer|exists:technologies,id'
-        
+            "tarrif"=>"required|numeric|min:0",
+            "desc"=>"required|string|min:4",
+            "status"=>"required|string|in:pending,accepted,refused"
         ];
     }
 }

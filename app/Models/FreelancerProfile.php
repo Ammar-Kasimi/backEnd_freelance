@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FreelancerProfile extends Model
 {
@@ -13,6 +14,9 @@ class FreelancerProfile extends Model
     }
     public function technologies(){
     return $this->belongsToMany(technology::class);
+  }
+  public function offers(){
+    return $this->hasMany(Offer::class);
   }
     
 }

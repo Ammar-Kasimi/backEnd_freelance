@@ -27,6 +27,9 @@ class MissionController extends Controller
         $mission=$request->user()->client->missions()->create($validated);
         $mission->status="available";
         $mission->save();
+        $mission->technologies()->sync($validated['technologies_ids']);
+        $mission->load(['technologies','category']);
+
         return response()->json(['status'=>"success",'message'=>'mission created successfully','data'=>$mission],201);
     }
 
